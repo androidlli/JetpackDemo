@@ -14,10 +14,9 @@ import java.util.concurrent.Executors
  * </pre>
  */
 class AppExecutors {
-    val mDiskIO = Executors.newSingleThreadExecutor()
-    val mNetworkIO = Executors.newFixedThreadPool(3)
-    val mMainThread = MainThreadExecutor()
-
+    private val mDiskIO = Executors.newSingleThreadExecutor()
+    private val mNetworkIO = Executors.newFixedThreadPool(3)
+    private val mMainThread = MainThreadExecutor()
 }
 
 class MainThreadExecutor : Executor {

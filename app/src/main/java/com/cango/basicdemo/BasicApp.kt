@@ -11,6 +11,7 @@ import android.app.Application
  * </pre>
  */
 class BasicApp : Application() {
+    private val mAppExecutors = AppExecutors()
     override fun onCreate() {
         super.onCreate()
     }
