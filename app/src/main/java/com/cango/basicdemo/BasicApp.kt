@@ -1,6 +1,7 @@
 package com.cango.basicdemo
 
 import android.app.Application
+import com.cango.basicdemo.db.AppDataBase
 
 /**
  * <pre>
@@ -11,8 +12,13 @@ import android.app.Application
  * </pre>
  */
 class BasicApp : Application() {
-    private val mAppExecutors = AppExecutors()
+    private lateinit var mAppExecutors: AppExecutors
     override fun onCreate() {
         super.onCreate()
+        mAppExecutors = AppExecutors()
     }
+
+    fun getDataBase(): AppDataBase? = AppDataBase.getInstance(this, mAppExecutors)
+
+    fun getDataRepository(appDataBase: AppDataBase) = getDataBase()?.let { DataRepository.getInstance(it) }
 }

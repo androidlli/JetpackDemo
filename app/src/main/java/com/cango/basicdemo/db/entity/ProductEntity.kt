@@ -12,11 +12,17 @@ import androidx.room.PrimaryKey
  * </pre>
  */
 @Entity(tableName = "products")
-class ProductEntity(@PrimaryKey var id: Int, var name: String, var description: String, var price: Int) {
-    constructor(productEntity: ProductEntity) : this(
-        productEntity.id,
-        productEntity.name,
-        productEntity.description,
-        productEntity.price
-    )
+class ProductEntity {
+    @PrimaryKey var id: Int = 0
+    lateinit var name: String
+    lateinit var description: String
+    var price: Int = 0
+
+    constructor(productEntity: ProductEntity) {
+        this.id = productEntity.id
+        this.name = productEntity.name
+        this.description = productEntity.description
+        this.price = productEntity.price
+    }
+    constructor()
 }

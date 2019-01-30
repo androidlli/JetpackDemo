@@ -18,7 +18,7 @@ import com.cango.basicdemo.db.entity.ProductEntity
 @Dao
 interface ProductDao {
     @Query("select * from products")
-    fun loadProducts(): LiveData<List<ProductEntity>>
+    fun loadAllProducts(): LiveData<List<ProductEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(products: List<ProductEntity>)

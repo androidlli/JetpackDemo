@@ -2,7 +2,9 @@ package com.cango.basicdemo.db.entity
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
+import org.w3c.dom.Comment
 import java.util.*
 
 /**
@@ -13,10 +15,19 @@ import java.util.*
  *     desc   :
  * </pre>
  */
-@Entity(tableName = "comments",
+@Entity(
+    tableName = "comments",
     foreignKeys = [ForeignKey(
         entity = ProductEntity::class,
         parentColumns = arrayOf("id"),
         childColumns = arrayOf("productId"),
-        onDelete = ForeignKey.CASCADE)])
-class CommentEntity(@PrimaryKey var id: Int, var productId: Int, var text: String, var postAt: Date)
+        onDelete = ForeignKey.CASCADE
+    )]
+)
+class CommentEntity {
+    @PrimaryKey var id: Int = 0
+    var productId: Int = 0
+    lateinit var text: String
+    lateinit var postAt: Date
+    constructor()
+}
