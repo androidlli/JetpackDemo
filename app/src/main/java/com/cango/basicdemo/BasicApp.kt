@@ -20,5 +20,5 @@ class BasicApp : Application() {
 
     fun getDataBase(): AppDataBase? = AppDataBase.getInstance(this, mAppExecutors)
 
-    fun getDataRepository(appDataBase: AppDataBase) = getDataBase()?.let { DataRepository.getInstance(it) }
+    fun getDataRepository() = getDataBase()?.let { DataRepository.getInstance(it) }
 }

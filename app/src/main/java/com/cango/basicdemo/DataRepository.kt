@@ -22,7 +22,13 @@ class DataRepository private constructor(private val mDataBase: AppDataBase) {
     init {
         mObservableProducts.addSource(
             mDataBase.productDao().loadAllProducts()
-        ) { productEntities -> mObservableProducts.postValue(productEntities) }
+        ) { productEntities ->
+            run {
+                if (mDataBase.getDatabaseCreated().value != null) {
+                    mObservableProducts.postValue(productEntities)
+                }
+            }
+        }
     }
 
     companion object {

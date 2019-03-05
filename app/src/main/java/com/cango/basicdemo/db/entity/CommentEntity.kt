@@ -4,7 +4,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import org.w3c.dom.Comment
 import java.util.*
 
 /**
@@ -22,12 +21,13 @@ import java.util.*
         parentColumns = arrayOf("id"),
         childColumns = arrayOf("productId"),
         onDelete = ForeignKey.CASCADE
-    )]
+    )],
+    indices = [Index(value = arrayOf("productId"))]
 )
 class CommentEntity {
-    @PrimaryKey var id: Int = 0
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0
     var productId: Int = 0
     lateinit var text: String
     lateinit var postAt: Date
-    constructor()
 }

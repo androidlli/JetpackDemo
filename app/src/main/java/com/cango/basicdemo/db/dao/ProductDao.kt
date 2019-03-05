@@ -25,4 +25,7 @@ interface ProductDao {
 
     @Query("select * from products where id = :productId")
     fun loadProduct(productId: Int): LiveData<ProductEntity>
+
+    @Insert
+    fun insertOther(productEntity: ProductEntity)
 }

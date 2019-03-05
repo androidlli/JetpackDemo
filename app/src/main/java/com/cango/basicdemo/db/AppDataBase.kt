@@ -1,10 +1,12 @@
 package com.cango.basicdemo.db
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.cango.basicdemo.AppExecutors
 import com.cango.basicdemo.DataGenerator
@@ -24,11 +26,11 @@ import com.cango.basicdemo.db.entity.ProductEntity
 const val DATA_BASE_NAME = "basic-db"
 
 @Database(version = 1, entities = [ProductEntity::class, CommentEntity::class])
+@TypeConverters(DateConverter::class)
 abstract class AppDataBase : RoomDatabase() {
     abstract fun productDao(): ProductDao
     abstract fun commentDao(): CommentDao
     var mIsDatabaseCreated = MutableLiveData<Boolean>()
-        set(value) = field.postValue(true)
 
     //使用Object构建单例模式，伴生对象
     companion object {
@@ -37,6 +39,7 @@ abstract class AppDataBase : RoomDatabase() {
             if (null == mInstance) {
                 synchronized(AppDataBase::class) {
                     mInstance = buildDataBase(appContext.applicationContext, appExcutors)
+                    mInstance!!.updateDatabaseCreated(appContext)
                 }
             }
             return mInstance
@@ -55,9 +58,11 @@ abstract class AppDataBase : RoomDatabase() {
                             val appDataBase = AppDataBase.getInstance(appContext, appExcutors)
                             val products = DataGenerator.generateProducts()
                             val comments = DataGenerator.generateCommentsForProducts(products)
-                            appDataBase!!.productDao().insertAll(products)
-                            appDataBase.commentDao().insertAll(comments)
-                            appDataBase.mIsDatabaseCreated.value = true
+                            appDataBase!!.runInTransaction {
+                                appDataBase.productDao().insertAll(products)
+                                appDataBase.commentDao().insertAll(comments)
+                            }
+                            appDataBase.setDatabaseCreated()
                         }
                     }
                 })
@@ -67,5 +72,19 @@ abstract class AppDataBase : RoomDatabase() {
         private fun addDelay() {
             Thread.sleep(4 * 1000)
         }
+    }
+
+    private fun updateDatabaseCreated(context: Context) {
+        if (context.getDatabasePath(DATA_BASE_NAME).exists()) {
+            setDatabaseCreated()
+        }
+    }
+
+    private fun setDatabaseCreated() {
+        mIsDatabaseCreated.postValue(true)
+    }
+
+    fun getDatabaseCreated(): LiveData<Boolean> {
+        return mIsDatabaseCreated
     }
 }
