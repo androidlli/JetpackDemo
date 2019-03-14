@@ -29,7 +29,7 @@ class ProductAdapter(private val mProductOnClick: ProductOnClickCallback) :
             //比较数据是否相同使用diffutil
             val result = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
                 override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                    return oldItemPosition == newItemPosition
+                    return mProductList[oldItemPosition].id == productList[newItemPosition].id
                 }
 
                 override fun getOldListSize(): Int {

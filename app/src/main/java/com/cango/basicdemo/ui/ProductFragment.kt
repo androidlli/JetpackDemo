@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.cango.basicdemo.R
 import com.cango.basicdemo.databinding.FragmentProductBinding
 import com.cango.basicdemo.db.entity.CommentEntity
@@ -17,11 +18,15 @@ import com.cango.basicdemo.viewmodel.CommentViewModel
 
 class ProductFragment : Fragment() {
     lateinit var mBinding: FragmentProductBinding
+    lateinit var mAdapter: CommentAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_product, container, false)
+        mAdapter = CommentAdapter()
+        mBinding.comments.layoutManager = LinearLayoutManager(activity)
+        mBinding.comments.adapter = mAdapter
         return mBinding.root
     }
 
@@ -45,7 +50,10 @@ class ProductFragment : Fragment() {
             })
         model.mObservalbeComments.observe(this,
             Observer<List<CommentEntity>> {
-
+                if (it != null) {
+                    mAdapter.setComments(it)
+                    mBinding.executePendingBindings()
+                }
             })
     }
 
